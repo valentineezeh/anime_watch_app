@@ -1,0 +1,281 @@
+# tags are used for organizing operations
+tags:
+- name: Anime
+  description: Secured Anime-only calls
+- name: User
+  description: Operations available to regular users
+
+paths:
+  /api/register:
+    post:
+      tags:
+        - user
+      description: This endpoint registers a user and stores user details into the userpool
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+        - in: body
+          name: Login Payload
+          description: User details item to add
+          schema:
+            type: object
+            properties:
+                email:
+                  type: string
+                  example: awesome@gmail.com
+                password:
+                  type: string
+                  example: password
+      responses:
+        200:
+          description: Successfully created a new User
+          schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: awesome@gmail.com
+                  userConfirmed:
+                    type: boolean
+                    example: true
+        422:
+          description: Something went wrong
+        400:
+          description: This field is required
+        500:
+          description: Internal Server error
+  /api/login:
+    post:
+      tags:
+        - user
+      description: This endpoint login a user
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+        - in: body
+          name: Login Payload
+          description: User details item to add
+          schema:
+            type: object
+            properties:
+                email:
+                  type: string
+                  example: awesome@gmail.com
+                password:
+                  type: string
+                  example: password
+      responses:
+        200:
+          description: Successfully created a new anime
+          schema:
+                type: object
+                items:
+                  $ref: '#/definitions/User'
+        422:
+          description: Something went wrong
+        400:
+          description: This field is required
+        500:
+          description: Internal Server error
+  /api/animes:
+    get:
+      tags:
+        - anime
+      description: This endpoint fetch all animes data
+      parameters:
+        - name: user-key
+          in: header
+          type: string
+          required: true
+          description: Insert user login token here
+      responses:
+        200:
+          description: Data fetched was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Anime'
+        401:
+          description: Unauthorize access
+        500:
+          description: Internal Server error
+
+    post:
+      tags:
+        - anime
+      description: create a new anime in the database by an authenticated user
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+        - in: header
+          name: user-key
+          type: string
+          required: true
+        - in: body
+          name: Anime Payload
+          schema:
+            $ref: '#/definitions/AnimeInputData'
+      responses:
+        200:
+          description: Successfully created a new anime
+          schema:
+            $ref: '#/definitions/Anime'
+        401:
+          description: Unauthorize access
+        400:
+          description: This field is required
+        500:
+          description: Internal Server error
+  /api/animes/{id}:
+    get:
+      tags:
+        - anime
+      description: Get an anime by ID
+      produces:
+      - application/json
+      parameters:
+        - in: header
+          name: user-key
+          type: string
+          required: true
+        - in: path
+          name: id
+          description: pass anime ID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Obtain information for a specific data
+          schema:
+            $ref: '#/definitions/Anime'
+    patch:
+      tags:
+        - anime
+      description: Update an anime by ID
+      produces:
+      - application/json
+      parameters:
+        - in: header
+          name: user-key
+          type: string
+          required: true
+        - in: path
+          name: id
+          description: pass anime ID
+          required: true
+          type: string
+        - in: body
+          name: Anime Payload
+          schema:
+            $ref: '#/definitions/AnimeInputData'
+      responses:
+        200:
+          description: Successfully created a new anime
+          schema:
+            $ref: '#/definitions/Anime'
+        401:
+          description: Unauthorize access
+        400:
+          description: This field is required
+        500:
+          description: Internal Server error
+    delete:
+      tags:
+        - anime
+      description: Get an anime by ID
+      produces:
+      - application/json
+      parameters:
+        - in: header
+          name: user-key
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: pass anime ID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success resource is now deleted
+        401:
+          description: Unauthorize access
+        404:
+          description: Not found
+        500:
+          description: Internal Server error
+definitions:
+  User:
+    description: Model containing user data
+    type: object
+    properties:
+      email:
+        type: string
+        example: awesome@gmail.com
+      uid:
+        type: string
+        example: bf35ed1f-b732-473c-9260-d76e16f5ffe3
+      auth_time:
+        type: string
+        example: 1630148202
+      token:
+        $ref: '#/definitions/Token'
+  Token:
+    properties:
+      idToken:
+        type: string
+        example: eyJraWQiOiJLVzJhbkQranY0TjVMT0NGZVE4WmkramZKZUR6Rjh
+      accessToken:
+        type: string
+        example: eyJraWQiOiJLVzJhbkQranY0TjVMT0NGZVE4WmkramZKZUR6Rjg
+      refreshToken:
+        type: string
+        example: eyJraWQiOiJLVzJhbkQranY0TjVMT0NGZVE4WmkramZKZUR6Rjh
+  Anime:
+    description: Model containing anime info
+    type: object
+    properties:
+      id:
+        type: integer
+        format: uuid
+        example: 904c00e6-488c-43f0-afc1-d70091856605
+      animeName:
+        type: string
+        example: God of high school
+      description:
+        type: string
+        example: Awesome anime
+      genre:
+        type: string
+        example: Action
+      userId:
+        type: string
+        example: bf35ed1f-b732-473c-9260-d76e16f5ffe3
+      timestamp:
+        type: string
+        format: date-time
+        example: 1629443184966
+  AnimeInputData:
+    description: Model containing anime input data
+    type: object
+    properties:
+      animeName:
+        type: string
+        example: God of high school
+      description:
+        type: string
+        example: Awesome anime
+      genre:
+        type: string
+        example: Action
+# Added by API Auto Mocking Plugin
+# host: valentine-training-api-dev.us-west-2.elasticbeanstalk.com
+# basePath: /api
+# schemes:
+#   - http

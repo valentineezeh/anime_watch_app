@@ -1,0 +1,59 @@
+{
+  "name": "valentine-training-backend-project",
+  "version": "1.0.0",
+  "description": "Backend training",
+  "main": "app.js",
+  "scripts": {
+    "start": "npm run prod",
+    "prod": "cross-env NODE_ENV=production npm-run-all build server",
+    "build": "npm-run-all clean transpile",
+    "clean": "rimraf ./dist",
+    "transpile": "babel ./src --out-dir dist --copy-files",
+    "server": "node ./dist/bin/app.js",
+    "dev": "nodemon --watch src --delay 250ms --exec babel-node src/bin/app.js --ignore tests/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/outliant/valentine-training-project.git"
+  },
+  "author": "Valentine Ezeh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/outliant/valentine-training-project/issues"
+  },
+  "homepage": "https://github.com/outliant/valentine-training-project#readme",
+  "dependencies": {
+    "amazon-cognito-identity-js": "5.0.6",
+    "aws-sdk": "2.964.0",
+    "babel-cli": "6.26.0",
+    "babel-core": "6.26.3",
+    "babel-plugin-add-module-exports": "1.0.4",
+    "babel-plugin-transform-async-to-generator": "6.24.1",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
+    "babel-plugin-transform-runtime": "6.23.0",
+    "babel-preset-env": "1.7.0",
+    "body-parser": "1.19.0",
+    "cognito-express": "2.0.19",
+    "cors": "2.8.5",
+    "cross-env": "7.0.3",
+    "dotenv": "10.0.0",
+    "errorhandler": "1.5.1",
+    "eslint": "7.32.0",
+    "eslint-config-airbnb": "18.2.1",
+    "eslint-plugin-import": "2.24.0",
+    "express": "4.17.1",
+    "express-validator": "5.3.1",
+    "helmet": "4.6.0",
+    "jsonwebtoken": "8.5.1",
+    "jwk-to-pem": "^2.0.5",
+    "jwt-decode": "3.1.2",
+    "morgan": "1.10.0",
+    "nodemon": "2.0.12",
+    "npm-run-all": "4.1.5",
+    "rimraf": "3.0.2",
+    "swagger-jsdoc": "3.0.2",
+    "swagger-ui-express": "4.0.0",
+    "uuid": "8.3.2",
+    "winston": "3.3.3"
+  }
+}
